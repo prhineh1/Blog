@@ -1,0 +1,147 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+@using Microsoft.AspNet.Identity;
+@using Blog.Models;
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="@Url.Content("~/favicon.ico")" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egressions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Personal Blog Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
+	Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+
+    <!----webfonts---->
+    <link href='https://fonts.googleapis.com/css?family=Oswald:100,400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,300italic' rel='stylesheet' type='text/css'>
+    <link href="~/Content/font-awesome-4.7.0/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!----//webfonts---->
+
+    <link href="~/Content/style.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <!---header---->
+    <nav class="navbar navbar-default navbar-static-top" style="background-color:white">
+        <div class="container">
+            <div class="navbar-header">
+                <div class="logo">
+                    <a href="/Home/Index"><img src="~/Images/logo.jpg" title="" /></a>
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#blogNav">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="blogNav">
+                <ul class="nav navbar-nav">
+                    <li><a href="/Home/Index">HOME</a></li>
+                    <li><a href="/Home/Contact">CONTACT</a></li>
+                    @{ var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin"))
+                            {
+                                <li class=""><a href="/Posts/Index">POSTS</a></li>
+                            }
+                        }
+                    }
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li>
+                            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                        </li>
+                        <li><a href="@Url.Action("LogOff", "Account")">LOG OFF</a></li>
+               
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("REGISTER", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+                        <li>@Html.ActionLink("LOG IN", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+                    }
+                </ul>
+                <form class="navbar-form navbar-left" method="get" action="/Home/index" style="margin-top: 12px">
+                    <div class="form-group">
+                        <input type="text" id="searchStr" name="searchStr" required="" placeholder="Search" style="border: none; background-color:lightgrey; float:left; width: 150px; padding-left: 5px;">
+                        <button type="submit" id="searchStr" name="searchStr" value="Search" style="border: none; float:left; background-color:lightgrey; height: 22px">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+        
+
+            <!---start-top-nav---->
+            @*<div class="top-menu">
+                <ul>
+                    <span class="menu"> </span>
+                    <li class="active"><a href="/Home/Index">HOME</a></li>
+                    <li class=""><a href="/Home/About">ABOUT</a></li>
+                    <li class=""><a href="/Home/Contact">CONTACT</a></li>
+                    @{ var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin"))
+                            {
+                                <li class=""><a href="/Posts/Index">POSTS</a></li>
+                            }
+                        }
+                    }
+                    @Html.Partial("_LoginPartial")
+                    <li>
+                        <div class="search">
+                            @using (Html.BeginForm("index", "Home", FormMethod.Get))
+                            {
+                                <input type="text" id="searchStr" name="searchStr" required="">
+                                <input type="submit" id="searchStr" name="searchStr" value="" style="background:url(../Images/search.png) no-repeat 0px 0px;" />
+                            }
+                        </div>
+                    </li>  
+                </ul>
+
+                </div>*@
+                @*<div class="clearfix"></div>*@
+        
+    <!--/header-->
+    @*<div class="container body-content">*@
+        @RenderBody()
+        <hr />
+        <!---->
+        <div class="footer">
+            <div class="container">
+                <p>Template by <a href="http://w3layouts.com/">W3layouts</a> (Modified by Phil Rhinehart)</p>
+            </div>
+        @*</div>*@
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script type="application/x-javascript">
+        addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
+    </script>
+
+    <script type="text/javascript">
+                jQuery(document).ready(function ($) {
+                    $(".scroll").click(function (event) {
+                        event.preventDefault();
+                        $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 900);
+                    });
+                });
+    </script>
+
+    <script>
+                $("span.menu").click(function () {
+                    $(".top-menu ul").slideToggle("slow", function () {
+                    });
+                });
+    </script>
+
+</body>
+</html>

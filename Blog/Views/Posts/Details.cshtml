@@ -1,0 +1,148 @@
+﻿@model Blog.Models.Post
+@using Blog.Models;
+@using Blog.ViewModel;
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using Microsoft.AspNet.Identity;
+
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@if (TempData["warning"] != null)
+{
+    <div style="align-content:center">
+        <div class="alert alert-dismissible alert-danger" style="position:absolute; z-index:5">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <a href="#cform" class="alert-link">Comments must be at least three characters long and cannot contain html.</a>
+        </div>
+    </div>
+}
+<div class="single">
+    <div class="container">
+        <div class="col-md-8 single-main">
+            <div class="single-grid">
+                @{ApplicationDbContext db = new ApplicationDbContext();
+                    var postList = db.Posts.ToList();
+                    var recent = postList.OrderBy(s => s.Created).Reverse();}
+                @if (Model.MediaURL != null)
+                {
+                    <img class="img-responsive" src="@Model.MediaURL" alt="" />
+                }
+                <p>
+                    @Html.Raw(Model.Body)
+                </p>
+            </div>
+            <ul class="comment-list">
+                <h5 class="post-author_head">Written by <a href="/Home/About" title="Posts by admin" rel="author">Phil</a></h5>
+                <li>
+                    <img src="~/Images/author.jpg" class="img-responsive" alt="">
+                    <div class="desc">
+                        <p>I'm a novice .NET developer hailing from the Piedmont-Triad area of NC.</p>
+                    </div>
+                    <div class="clearfix"></div>
+                </li>  
+            </ul>
+            @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+            {
+                                    <!-- Comment -->
+                <div class="media">
+                    @*<a class="pull-left" href="#">
+                        <img class="media-object" src="http://placehold.it/64x64" alt="">
+                    </a>*@
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                                @comment.Author.DisplayName                     
+                            <small>@comment.Created.ToString().Substring(0,21)</small>
+                        </h4>
+                        @comment.Body
+                        @if( comment.UpdateReason != null)
+                        {   <br />
+                            <p><br />       @comment.Updated.ToString().Substring(0,21)</p>
+                            <span><i>       @comment.UpdateReason</i></span>
+                        }
+                    </div>                   
+                       @{ var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                           if (User.Identity.IsAuthenticated)
+                           {
+                               if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin") ||
+                                   UserManager.IsInRole(User.Identity.GetUserId(), "Moderator"))
+                               {
+                                    <div style="text-align:right">
+                                        <small>
+                                            <a href="/Comments/edit/?id=@comment.ID">edit</a><br />
+                                            <a href="/Comments/delete/?id=@comment.ID">delete</a>
+                                        </small>
+                                    </div>
+                               }
+                           }
+                        }                   
+                </div>
+                <hr />
+            }
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                    <div class="content-form" id="cform">
+                        <h3>LEAVE A COMMENT</h3>
+                        <form action="/Comments/Create" enctype="Multipart/form-data" method="post" id="commentForm">
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.ID)
+                            @*<input type="text" placeholder="Name" required />
+                                <input type="text" placeholder="Email" required />
+                                <input type="text" placeholder="Phone" required />*@
+                            <textarea cols="20" id="message" name="message" rows="2" placeholder="Comment"></textarea>
+                            <input type="submit" value="SUBMIT" />
+                        </form>
+                    </div>
+            }
+      
+        </div>
+
+        <div class="col-md-4 side-content">
+            @if (recent.Count() >= 3)
+            {
+                <div class="recent">
+                    <h3>RECENT POSTS</h3>
+                    <ul>
+                        <li>@Html.ActionLink(recent.ElementAt(0).Title, recent.ElementAt(0).Slug, "Blog")</li>
+                        <li>@Html.ActionLink(recent.ElementAt(1).Title, recent.ElementAt(1).Slug, "Blog")</li>
+                        <li>@Html.ActionLink(recent.ElementAt(2).Title, recent.ElementAt(2).Slug, "Blog")</li>
+                        <li>@Html.ActionLink(recent.ElementAt(3).Title, recent.ElementAt(3).Slug, "Blog")</li>
+                    </ul>
+                </div>
+            }
+            @if (Recent.recentComment().Count() >= 3)
+            {
+                <div class="comments">
+                    <h3>RECENT COMMENTS</h3>
+                    <ul>
+                        <li>@Recent.recentComment().ElementAt(0).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(0), Recent.recentCommentPost().ElementAt(1).ElementAt(0), "Blog")</li>
+                        <li>@Recent.recentComment().ElementAt(1).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(1), Recent.recentCommentPost().ElementAt(1).ElementAt(1), "Blog")</li>
+                        <li>@Recent.recentComment().ElementAt(2).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(2), Recent.recentCommentPost().ElementAt(1).ElementAt(2), "Blog")</li>
+                    </ul>
+                </div>
+            }   
+            <div class="clearfix"></div>
+            <div class="archives">
+                <h3>ARCHIVES</h3>
+                <ul>
+                    <li><a href="/Home/Index/7/2017">July 2017</a></li>
+                    <li><a href="/Home/Index/8/2017">August 2017</a></li>
+                    <li><a href="/Home/Index/9/2017">September 2017</a></li>
+                    <li><a href="/Home/Index/10/2017">October 2017</a></li>
+                </ul>
+            </div>
+            <div class="categories">
+                <h3>CATEGORIES</h3>
+                <ul>
+                    <li><a href="/Home/Index/0/0/verse">Verse</a></li>
+                    <li><a href="/Home/Index/0/0/coding">Coding</a></li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+

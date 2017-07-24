@@ -1,0 +1,87 @@
+﻿<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+@using PagedList;
+@using PagedList.Mvc;
+@using Blog.ViewModel
+@model IPagedList<Blog.Models.Post>
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+<div class="content">
+	 <div class="container">
+		 <div class="content-grids">
+			 <div class="col-md-8 content-main">
+				 <div class="content-grid">	
+                     @foreach (var post in Model)
+                     {
+                        <div class="content-grid-info">
+                            @if (post.MediaURL != null)
+                            {
+                                <img class="img-responsive" src=@post.MediaURL alt="" />
+                            }
+                            <div class="post-info">
+                                <h4>@Html.ActionLink(post.Title.ToUpper(), post.Slug, "Blog") @post.Created.ToString().Substring(0, 10) -- @Recent.commentCount(post.ID) comments</h4>
+                                <p>@Html.Raw(post.Abstract)</p>
+                                @{ var moreDirect = "/Blog/" + post.Slug;}
+                               <a href=@moreDirect><img src="~/Images/more.png" /></a>
+                                @Html.ActionLink("READ MORE", post.Slug, "Blog")
+                            </div>
+                        </div>
+                     }	
+                     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                     @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchStr = ViewBag.Search }))
+				 </div>
+			  </div>
+               <div class="col-md-4 content-right">                 
+                       <div class="recent">
+                           <h3>RECENT POSTS</h3>
+                            @if (Recent.recentPost().Count() >= 1)
+                            {
+                           <ul>
+                               <li>@Html.ActionLink(Recent.recentPost().ElementAt(0).Title, Recent.recentPost().ElementAt(0).Slug, "Blog")</li>
+                               @*<li>@Html.ActionLink(Recent.recentPost().ElementAt(1).Title, Recent.recentPost().ElementAt(1).Slug, "Blog")</li>
+                               <li>@Html.ActionLink(Recent.recentPost().ElementAt(2).Title, Recent.recentPost().ElementAt(2).Slug, "Blog")</li>
+                               <li>@Html.ActionLink(Recent.recentPost().ElementAt(3).Title, Recent.recentPost().ElementAt(3).Slug, "Blog")</li>*@
+                           </ul>
+                            }
+                       </div>                
+                    <div class="comments">
+                           <h3>RECENT COMMENTS</h3>
+                    @if (Recent.recentComment().Count() >= 1)
+                    {  
+                    <ul>
+                        <li>@Recent.recentComment().ElementAt(0).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(0), Recent.recentCommentPost().ElementAt(1).ElementAt(0), "Blog")</li>
+                        <li>@Recent.recentComment().ElementAt(1).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(1), Recent.recentCommentPost().ElementAt(1).ElementAt(1), "Blog")</li>
+                        <li>@Recent.recentComment().ElementAt(2).Author.DisplayName on @Html.ActionLink(Recent.recentCommentPost().ElementAt(0).ElementAt(2), Recent.recentCommentPost().ElementAt(1).ElementAt(2), "Blog")</li>
+                    </ul>
+                    }                  
+                       </div>
+  
+                    <div class="clearfix"></div>
+                    <div class="archives">
+                        <h3>ARCHIVES</h3>
+                        <ul>
+                            <li><a href="/Home/Index/7/2017">July 2017</a></li>
+                            <li><a href="/Home/Index/8/2017">August 2017</a></li>
+                            <li><a href="/Home/Index/9/2017">September 2017</a></li>
+                            <li><a href="/Home/Index/10/2017">October 2017</a></li>
+                        </ul>
+                    </div>
+                    <div class="categories">
+                        <h3>CATEGORIES</h3>
+                        <ul>
+                            <li><a href="/Home/Index/0/0/verse">Verse</a></li>
+                            <li><a href="/Home/Index/0/0/coding">Coding</a></li>
+                        </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+			  <div class="clearfix"></div>
+		  </div>
+	  </div>
+</div>
+

@@ -1,0 +1,1 @@
+﻿Update-Database -Verbose -ConnectionString "Server=coderfoundry.cloudapp.net,55555;Database=prhinehart-blog;User ID=prhinehart;Password=wanwa1Ha;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;TrustServerCertificate=True;" -ConnectionProviderName "System.Data.SqlClient"

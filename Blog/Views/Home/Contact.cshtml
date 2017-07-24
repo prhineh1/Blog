@@ -1,0 +1,65 @@
+﻿<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+
+@model Blog.Models.EmailModel
+
+@{
+    ViewBag.Title = "Contact";
+}
+
+@if (TempData["warning"] != null)
+{
+    <div style="align-content:center">
+        <div class="alert alert-dismissible alert-danger" style="position:absolute; z-index:5">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <a href="#Body" class="alert-link">Messages must be at least three characters long and cannot contain html.</a>
+        </div>
+    </div>
+}
+
+<div class="contact-content">
+	 <div class="container">
+		     <div class="contact-info">
+                 <h2>CONTACT</h2>
+			     <p> Ideas for posts? Comments? Vituperation? Send me you all of it.</p>
+		     </div>
+			 <div class="contact-details">				 
+			     @using (Html.BeginForm()) {
+                     @Html.AntiForgeryToken()
+ 
+                     @Html.TextBoxFor(m => m.FromName, new { @placeholder="Name", required="required" })
+                     @Html.ValidationMessageFor(m => m.FromName)
+                     <br />
+
+                     @Html.TextBoxFor(m => m.FromEmail, new { @placeholder="Email", required="required" })
+                     @Html.ValidationMessageFor(m => m.FromEmail)
+
+                     @Html.TextBoxFor(m => m.Subject, new { @placeholder="Subject", required="required" })
+                     @Html.ValidationMessageFor(m => m.Subject)
+
+                     @Html.TextAreaFor(m => m.Body, new { @placeholder="Message", required="required" })
+                     @Html.ValidationMessageFor(m => m.Body)
+				     <input type="submit" value="SEND"/>
+			     }
+		   </div>
+		  <div class="contact-details">
+			  <div class="col-md-6 contact-map">
+				 <h4>FIND US HERE</h4>
+				 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8764.749065926579!2d125.74658022837721!3d39.04252538566831!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf738710736c1ca78!2sArch+of+Triumph!5e0!3m2!1sen!2sus!4v1500645463246" frameborder="0" style="border:0"></iframe>
+			  </div>
+			  <div class="col-md-6 company_address">		 
+					<h4>GET IN TOUCH</h4>
+					<p>Arch of Triumph,</p>
+					<p>Pyonyang, North Korea,</p>
+					<p>Phone: 666 867 5309</p>
+					<p>Email: <a href="mailto:rhinehartphillip@gmail.com">rhinehartphillip@gmail.com</a></p>
+
+			 </div>
+			  <div class="clearfix"></div>
+	     </div>		 
+    </div>
+</div>
