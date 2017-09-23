@@ -11,6 +11,12 @@ namespace Blog.Models
         public Post()
         {
             this.Comments = new HashSet<Comment>();
+            CategoryDictionary = new Dictionary<string, string>()
+            {
+                {"Auto", "Auto" },
+                {"Food", "Food" },
+                {"Entertainment", "Entertainment" }
+            };
         }
         public int ID { get; set; }
         public DateTimeOffset Created { get; set; }
@@ -23,6 +29,8 @@ namespace Blog.Models
         public string Body { get; set; }
         public string MediaURL { get; set; }
         public bool Published { get; set; }
+        public string Category { get; set; }
+        public Dictionary<string, string> CategoryDictionary { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
     }

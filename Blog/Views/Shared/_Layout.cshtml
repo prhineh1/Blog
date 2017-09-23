@@ -76,40 +76,6 @@
         </div>
     </nav>
         
-
-            <!---start-top-nav---->
-            @*<div class="top-menu">
-                <ul>
-                    <span class="menu"> </span>
-                    <li class="active"><a href="/Home/Index">HOME</a></li>
-                    <li class=""><a href="/Home/About">ABOUT</a></li>
-                    <li class=""><a href="/Home/Contact">CONTACT</a></li>
-                    @{ var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin"))
-                            {
-                                <li class=""><a href="/Posts/Index">POSTS</a></li>
-                            }
-                        }
-                    }
-                    @Html.Partial("_LoginPartial")
-                    <li>
-                        <div class="search">
-                            @using (Html.BeginForm("index", "Home", FormMethod.Get))
-                            {
-                                <input type="text" id="searchStr" name="searchStr" required="">
-                                <input type="submit" id="searchStr" name="searchStr" value="" style="background:url(../Images/search.png) no-repeat 0px 0px;" />
-                            }
-                        </div>
-                    </li>  
-                </ul>
-
-                </div>*@
-                @*<div class="clearfix"></div>*@
-        
-    <!--/header-->
-    @*<div class="container body-content">*@
         @RenderBody()
         <hr />
         <!---->
@@ -117,7 +83,6 @@
             <div class="container">
                 <p>Template by <a href="http://w3layouts.com/">W3layouts</a> (Modified by Phil Rhinehart)</p>
             </div>
-        @*</div>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")

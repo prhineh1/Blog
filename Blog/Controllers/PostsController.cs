@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Blog.Helpers;
 
 
 namespace Blog.Controllers
@@ -68,6 +69,8 @@ namespace Blog.Controllers
 
             if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin"))
             {
+                var categoryHelper = new Category();
+                ViewBag.Category = new SelectList(categoryHelper.CategoryDictionary.Keys.ToList());
                 return View();
             }
             else
@@ -81,7 +84,7 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Title,Body,Published,Abstract,MediaURL")] Models.Post post, 
+        public ActionResult Create([Bind(Include = "Title,Body,Published,Abstract,MediaURL,Category")] Models.Post post, 
             HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
@@ -131,7 +134,7 @@ namespace Blog.Controllers
                         post.MediaURL = "/Images/" + completeName;
                     }           
                 }
-
+              
                 post.Slug = slug;
                 post.Created = DateTimeOffset.Now;
                 db.Posts.Add(post);
@@ -162,6 +165,8 @@ namespace Blog.Controllers
 
             if (UserManager.IsInRole(User.Identity.GetUserId(), "Admin"))
             {
+                var categoryHelper = new Category();
+                ViewBag.Category = new SelectList(categoryHelper.CategoryDictionary.Keys.ToList(), categoryHelper.CategoryDictionary[post.Category]);
                 return View(post);
             }
             else
@@ -175,7 +180,7 @@ namespace Blog.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,Body,Published,Abstract,MediaURL,Created")] Models.Post post,
+        public ActionResult Edit([Bind(Include = "ID,Title,Body,Published,Abstract,MediaURL,Created,Category")] Models.Post post,
             HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
